@@ -11,7 +11,7 @@ public_id = full_dataset.iloc[:, 0].to_numpy()
 gene = full_dataset.iloc[:, 1].to_numpy()
 
 #attributes of gene  
-attributes = full_dataset.iloc[:, 3:].to_numpy()
+attributes = full_dataset.iloc[:, 3:6].to_numpy()
 
 # Object to store all values of a datapoint 
 class DataPoint:
