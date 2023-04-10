@@ -1,15 +1,16 @@
 import pandas as pd
 import numpy as np
 
+#read csv file 
 full_dataset = pd.read_csv("Longotor1delta.csv")
 
-# Name  
+#id of the datapoints
 public_id = full_dataset.iloc[:, 0].to_numpy()
 
-# Grade classification of wine 
+#gene name 
 gene = full_dataset.iloc[:, 1].to_numpy()
 
-# Attributes 
+#attributes of gene  
 attributes = full_dataset.iloc[:, 3:].to_numpy()
 
 # Object to store all values of a datapoint 
@@ -30,7 +31,7 @@ def StructData(DataSet):
     # set empty array 
     dataset = []
 
-    # for the number of elements in the file, set the type, key, and values of each point and populate said point into testdataset. Testdataset is an array of objects. 
+    # for the number of elements in the file, set the type, key, and values of each point and populate said point
     for i in range(len(public_id)): 
         d = DataPoint()
         d.type = public_id[i]
