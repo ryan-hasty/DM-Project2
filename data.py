@@ -20,10 +20,21 @@ class DataPoint:
         self.key = 0
         self.values = np.array([])
         self.prediction_keys = np.array([])
+        self.cluster_id = 0
 
 class DataSet:
     def __init__(self):
         self.data = np.array([])
+
+class Clusters:
+    def __init__(self):
+        self.cluster = np.array([])
+
+class Cluster:
+    def __init__(self):
+        self.cluster_id = 0
+        self.values = np.array([])
+        self.centroid = np.array([])
 
 
 # Populate data object
@@ -50,4 +61,21 @@ def GetData():
     Dataset = DataSet()
     #Format the data 
     FormattedData = StructData(Dataset)
+    FindMinandMax(FormattedData)
     return FormattedData
+
+def FindMinandMax(FormattedData):
+    
+    temparray = np.zeros((len(FormattedData.data), 3))
+
+    for k in range(3):
+
+        for i, row in enumerate(FormattedData.data):
+            temparray[i, k] = row.values[k]
+
+        minimum = np.min(temparray[:, k])
+        maximum = np.max(temparray[:, k])
+
+        for i in range(len(FormattedData.data)):
+            FormattedData.data[i].values[k] = (temparray[i, k] - minimum) / (maximum - minimum)
+
