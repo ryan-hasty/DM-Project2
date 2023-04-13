@@ -18,8 +18,7 @@ class DataPoint:
     def __init__(self):
         self.type = ""
         self.key = 0
-        self.values = np.array([])
-        self.prediction_keys = np.array([])
+        self.values = np.array([np.array([])])
         self.cluster_id = 0
 
 class DataSet:
@@ -33,8 +32,8 @@ class Clusters:
 class Cluster:
     def __init__(self):
         self.cluster_id = 0
-        self.values = np.array([])
-        self.centroid = np.array([])
+        self.values = np.array([np.array([])])
+        self.centroid = np.array([np.array([])])
 
 
 # Populate data object
@@ -64,8 +63,8 @@ def GetData():
     FindMinandMax(FormattedData)
     return FormattedData
 
+
 def FindMinandMax(FormattedData):
-    
     temparray = np.zeros((len(FormattedData.data), 3))
 
     for k in range(3):
