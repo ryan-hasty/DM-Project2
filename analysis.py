@@ -40,7 +40,7 @@ def GeneStats(clusters):
             print("{")
             count += 1
             for idx, e in enumerate(i.values):
-                if (idx + 1) % 100 == 0:
+                if (idx + 1) % 50 == 0:
                     print(e.key)
                     print()
                 else:

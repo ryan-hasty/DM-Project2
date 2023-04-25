@@ -27,6 +27,7 @@ def Cluster(dataset, clusters):
     for e in dataset.data:
         distance = []
         for i in clusters.cluster: 
+            #Euclidean
             distance = np.append(distance, np.linalg.norm(i.centroid.values - e.values))
         e.cluster_id = (distance.tolist().index(min(distance)))
         for i in clusters.cluster:

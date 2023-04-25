@@ -10,6 +10,6 @@ def main():
     kvalue = int(kvalue)
     results = kmeans.KMeansHub(dataset, kvalue)
     any.GeneStats(results)
-    #any.PlotClusters(results, kvalue)
+    any.PlotClusters(results, kvalue)
 
 main()
