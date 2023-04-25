@@ -20,7 +20,7 @@ def hierarchical_clustering(dataset):
                     # get indexes of smallest variables
                     small2 = np.where(dataset == j)
         # Add the point to the clustered points if it makes it here.
-        clustered_data.append(clustered_data, x)
+        clustered_data = np.append(clustered_data, x)
 
     # add the new "centroid" / Average between two points
     np.append(clustered_data, np.mean(dataset.data[small1, small2]))
