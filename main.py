@@ -1,7 +1,7 @@
 import data as data
 import kmeans as kmeans
 import analysis as any
-import hierarchical as h
+import hybrid as h
 
 
 def main():
@@ -14,6 +14,6 @@ def main():
     #any.PlotClusters(results, kvalue)
 
     datset = data.GetDataForHClusering()
-    temp = h.HierarchicalHub(datset)
+    temp = h.HierarchicalHub(results)
     print("yts")
 main()
