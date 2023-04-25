@@ -56,9 +56,9 @@ def StructData(DataSet):
 
 
 def GetData():
-    #Create new dataset object 
+    #Create new dataset object
     Dataset = DataSet()
-    #Format the data 
+    #Format the data
     FormattedData = StructData(Dataset)
     FindMinandMax(FormattedData)
     return FormattedData
@@ -77,4 +77,3 @@ def FindMinandMax(FormattedData):
 
         for i in range(len(FormattedData.data)):
             FormattedData.data[i].values[k] = (temparray[i, k] - minimum) / (maximum - minimum)
-
