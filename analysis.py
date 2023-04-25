@@ -32,7 +32,7 @@ def PlotClusters(clusters, num_clusters):
 
 def GeneStats(clusters):
     count = 1
-    with open("output.txt", "w") as f:
+    with open("kmeans.txt", "w") as f:
         f.truncate(0)  # Clears the file contents
         for i in clusters.cluster:
             sys.stdout = f
@@ -40,10 +40,30 @@ def GeneStats(clusters):
             print("{")
             count += 1
             for idx, e in enumerate(i.values):
-                if (idx + 1) % 50 == 0:
+                if (idx + 1) % 100 == 0:
                     print(e.key)
                     print()
                 else:
                     print(e.key, end=", ")
             print("}")
+
+
+
+def GeneStatsHybrid(clusters):
+    count = 1
+    with open("hybrid.txt", "w") as f:
+        f.truncate(0)  # Clears the file contents
+        for i in clusters.cluster:
+            sys.stdout = f
+            print("Cluster " + str(count))
+            print("{")
+            count += 1
+            for idx, e in enumerate(i.values):
+                if (idx + 1) % 100 == 0:
+                    print(e.key)
+                    print()
+                else:
+                    print(e.key, end=", ")
+            print("}")
+
 

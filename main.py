@@ -10,10 +10,19 @@ def main():
     kvalue = input("How many clusters would you like to test?: ")
     kvalue = int(kvalue)
     results = kmeans.KMeansHub(dataset, kvalue)
-    #any.GeneStats(results)
     #any.PlotClusters(results, kvalue)
 
-    datset = data.GetDataForHClusering()
+
+    heightValue = input("What height would you like to use?: ")
+    heightValue = int(heightValue)
     temp = h.HierarchicalHub(results)
-    print("yts")
+
+    temp = temp.clusters[heightValue]
+    
+
+
+
+    any.GeneStats(results)
+    any.GeneStatsHybrid(temp)
+
 main()
