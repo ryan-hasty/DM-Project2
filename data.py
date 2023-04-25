@@ -14,6 +14,10 @@ gene = full_dataset.iloc[:, 1].to_numpy()
 attributes = full_dataset.iloc[:, 3:6].to_numpy()
 
 # Object to store all values of a datapoint 
+class DataSet:
+    def __init__(self):
+        self.data = np.array([])
+
 class DataPoint:
     def __init__(self):
         self.type = ""
@@ -21,13 +25,15 @@ class DataPoint:
         self.values = np.array([np.array([])])
         self.cluster_id = 0
 
-class DataSet:
+class ClusterTree:
     def __init__(self):
-        self.data = np.array([])
+        self.clusters = np.array([np.array([])])
 
 class Clusters:
     def __init__(self):
         self.cluster = np.array([])
+        self.amount = 0
+        self.averagedistance = 0
 
 class Cluster:
     def __init__(self):
@@ -55,6 +61,23 @@ def StructData(DataSet):
     return DataSet
 
 
+
+def StructDataForHClustering(DataSet, Clusters):
+    # set empty array 
+    dataset = []
+
+    # for the number of elements in the file, set the type, key, and values of each point and populate said point
+    for i in DataSet.data: 
+        d = Cluster()
+        d.centroid = i.values
+        dataset.append(d)
+
+    #Sets the arrays within the DataSet object to the newly populated arrays 
+    Clusters.cluster = np.array(dataset)
+
+    return Clusters
+
+
 def GetData():
     #Create new dataset object
     Dataset = DataSet()
@@ -62,6 +85,16 @@ def GetData():
     FormattedData = StructData(Dataset)
     FindMinandMax(FormattedData)
     return FormattedData
+
+def GetDataForHClusering():
+    #create new clusters object
+    Cluster = Clusters()
+    dataset = GetData()
+    Formatteddata =  StructDataForHClustering(dataset, Cluster)
+
+
+    return Formatteddata
+
 
 
 def FindMinandMax(FormattedData):
@@ -77,3 +110,4 @@ def FindMinandMax(FormattedData):
 
         for i in range(len(FormattedData.data)):
             FormattedData.data[i].values[k] = (temparray[i, k] - minimum) / (maximum - minimum)
+
