@@ -1,17 +1,19 @@
 import data as data
 import numpy as np
-from scipy.spatial.distance import pdist, squareform
+from scipy.spatial.distance import cdist
 
 def HierarchicalHub(dataset):
     #Add the first set of clusters, every data point is a cluster
     Clustertree = data.ClusterTree()
     Clustertree.clusters = np.array([dataset])
+    count = 0
     #Find the min of the first two closest clusters, and combine them
     min_row_idx, min_col_idx = CalculateDistance(dataset)
     newclusters = MergeClosestCluster(min_row_idx, min_col_idx, dataset)
     Clustertree.clusters = np.append(Clustertree.clusters, newclusters)
 
-    while(len(newclusters.cluster) > 1):
+    while(count < 170):
+        count += 1
         min_row_idx, min_col_idx = CalculateDistance(newclusters)
         newclusters = MergeClosestCluster(min_row_idx, min_col_idx, newclusters)
         Clustertree.clusters = np.append(Clustertree.clusters, newclusters)
@@ -23,15 +25,33 @@ def HierarchicalHub(dataset):
 def CalculateDistance(clusters):
     centroids = []
     for i in clusters.cluster:
-        centroids.append(i.centroid.values)
-    
-    distance = pdist(centroids) # compute pairwise distances between centroids
-    
-    # Convert the condensed distance matrix to a square distance matrix
-    distance = squareform(distance, force='nochecks')
-    
-    # Set the diagonal elements to infinity to exclude comparisons with itself
-    np.fill_diagonal(distance, np.inf) 
+        centroids.append(i.centroid)
+
+    num_centroids = len(centroids)
+    distance = np.zeros((num_centroids, num_centroids))
+
+    for i in range(len(centroids)):
+        for j in range(i+1, len(centroids)):
+            if isinstance(centroids[j], data.DataPoint) and isinstance(centroids[i], data.DataPoint) == False:
+                dist = np.linalg.norm(centroids[i] - centroids[j].values)
+                centroids[j] = centroids[j].values
+                distance[i, j] = dist
+                distance[j, i] = dist
+            elif isinstance(centroids[i], data.DataPoint) and isinstance(centroids[j], data.DataPoint) == False:
+                dist = np.linalg.norm(centroids[i].values - centroids[j])
+                centroids[i] = centroids[i].values
+                distance[i, j] = dist
+                distance[j, i] = dist
+            elif isinstance(centroids[i], data.DataPoint) and isinstance(centroids[j], data.DataPoint):
+                dist = np.linalg.norm(centroids[i].values - centroids[j].values)
+                centroids[j] = centroids[j].values
+                centroids[i] = centroids[i].values
+                distance[i, j] = dist
+                distance[j, i] = dist
+            else:
+                dist = np.linalg.norm(centroids[i] - centroids[j])
+                distance[i, j] = dist
+                distance[j, i] = dist
     
     min_row_idx, min_col_idx = FindMinDistance(distance)
     
@@ -41,6 +61,7 @@ def CalculateDistance(clusters):
     clusters.averagedistance = AverageDistance(distance)
     
     return min_row_idx, min_col_idx
+
 
 
 
@@ -69,13 +90,19 @@ def MergeClosestCluster(min_row_idx, min_col_idx, clusters):
     newcentroid = np.mean([clusters.cluster[min_row_idx].centroid.values, clusters.cluster[min_col_idx].centroid.values], axis=0)
     newdata = data.DataPoint()
     newdata.values = newcentroid
-    newcluster.cluster_id = clusters.cluster[min_row_idx].cluster_id
-    newcluster.values = np.concatenate((clusters.cluster[min_row_idx].values, clusters.cluster[min_col_idx].values))
+    newcluster.cluster_id = min_row_idx * clusters.cluster.size
+    if clusters.cluster[min_row_idx].centroid.candidate == False and clusters.cluster[min_row_idx].centroid.known == False: 
+        newcluster.values = np.append(newcluster.values, clusters.cluster[min_row_idx].values)
+        newcluster.values = np.append(newcluster.values, clusters.cluster[min_col_idx].values)
+    else:
+        newcluster.values = np.append(newcluster.values, clusters.cluster[min_row_idx].centroid)
+        newcluster.values = np.append(newcluster.values, clusters.cluster[min_col_idx].centroid)   
+           
     newcluster.centroid = newdata
-    
     # Create new clusters object with all clusters except the two being merged
     newclusters = data.Clusters()
     newclusters.cluster = np.delete(clusters.cluster, [min_row_idx, min_col_idx])
-    newclusters.cluster = np.concatenate((newclusters.cluster, [newcluster]))
+    newclusters.cluster = np.append(newclusters.cluster, newcluster)
+
 
     return newclusters

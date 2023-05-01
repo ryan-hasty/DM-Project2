@@ -35,17 +35,28 @@ def GeneStats(clusters):
     with open("kmeans.txt", "w") as f:
         f.truncate(0)  # Clears the file contents
         for i in clusters.cluster:
+            known = 0
+            candidate = 0
             sys.stdout = f
             print("Cluster " + str(count))
             print("{")
             count += 1
             for idx, e in enumerate(i.values):
-                if (idx + 1) % 100 == 0:
-                    print(e.key)
-                    print()
-                else:
-                    print(e.key, end=", ")
-            print("}")
+                if e.known == True:
+                    known+= 1
+                    if (idx + 1) % 25 == 0:
+                        print(e.type + "(KNOWN)")
+                        print()
+                    else:
+                        print(e.type + "(KNOWN)", end=", ")
+                elif e.candidate == True:
+                    candidate += 1
+                    if (idx + 1) % 25 == 0:
+                        print(e.type + "(CANIDATE)")
+                        print()   
+                    else:
+                        print(e.type + "(CANIDATE)", end=", ")
+            print("Number of Canidate Genes", candidate, "Number of known genes", known, "Ratio", known/candidate, "}")
 
 
 
@@ -60,10 +71,10 @@ def GeneStatsHybrid(clusters):
             count += 1
             for idx, e in enumerate(i.values):
                 if (idx + 1) % 100 == 0:
-                    print(e.key)
+                    print(e.type)
                     print()
                 else:
-                    print(e.key, end=", ")
+                    print(e.type, end=", ")
             print("}")
 
 

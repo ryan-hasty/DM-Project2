@@ -1,28 +1,24 @@
 import data as data
 import kmeans as kmeans
 import analysis as any
-import hybrid as h
+import hierchical as h
 
 
 def main():
     dataset = data.GetData()
+    hdataset = data.GetDataForHClusering()
 
     kvalue = input("How many clusters would you like to test?: ")
     kvalue = int(kvalue)
     results = kmeans.KMeansHub(dataset, kvalue)
     #any.PlotClusters(results, kvalue)
 
+    temp = h.HierarchicalHub(hdataset)
 
-    heightValue = input("What height would you like to use?: ")
-    heightValue = int(heightValue)
-    temp = h.HierarchicalHub(results)
+    last_element = temp.clusters[-1]
 
-    temp = temp.clusters[heightValue]
     
-
-
-
     any.GeneStats(results)
-    any.GeneStatsHybrid(temp)
+    any.GeneStatsHybrid(last_element)
 
 main()

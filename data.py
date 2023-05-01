@@ -3,15 +3,20 @@ import numpy as np
 
 #read csv file 
 full_dataset = pd.read_csv("Longotor1delta.csv")
+actual_dataset = pd.read_csv("interested_genes.csv")
 
 #id of the datapoints
 public_id = full_dataset.iloc[:, 0].to_numpy()
+canidate_genes = actual_dataset.iloc[:, 0].to_numpy()
 
 #gene name 
 gene = full_dataset.iloc[:, 1].to_numpy()
+known_genes = actual_dataset.iloc[:, 1].to_numpy()
 
 #attributes of gene  
 attributes = full_dataset.iloc[:, 3:6].to_numpy()
+
+
 
 # Object to store all values of a datapoint 
 class DataSet:
@@ -24,6 +29,8 @@ class DataPoint:
         self.key = 0
         self.values = np.array([np.array([])])
         self.cluster_id = 0
+        self.candidate = False
+        self.known = False
 
 class ClusterTree:
     def __init__(self):
@@ -49,11 +56,20 @@ def StructData(DataSet):
 
     # for the number of elements in the file, set the type, key, and values of each point and populate said point
     for i in range(len(public_id)): 
-        d = DataPoint()
-        d.type = public_id[i]
-        d.key = gene[i]
-        d.values = attributes[i]
-        dataset.append(d)
+        if gene[i] in canidate_genes or public_id[i] in canidate_genes: 
+            d = DataPoint()
+            d.type = public_id[i]
+            d.key = gene[i]
+            d.values = attributes[i]
+            d.candidate = True
+            dataset.append(d)
+        elif gene[i] in known_genes or public_id[i] in known_genes:
+            d = DataPoint()
+            d.type = public_id[i]
+            d.key = gene[i]
+            d.values = attributes[i]
+            d.known = True
+            dataset.append(d)
 
     #Sets the arrays within the DataSet object to the newly populated arrays 
     DataSet.data = np.array(dataset)
@@ -69,7 +85,7 @@ def StructDataForHClustering(DataSet, Clusters):
     # for the number of elements in the file, set the type, key, and values of each point and populate said point
     for i in DataSet.data: 
         d = Cluster()
-        d.centroid = i.values
+        d.centroid = i
         dataset.append(d)
 
     #Sets the arrays within the DataSet object to the newly populated arrays 
